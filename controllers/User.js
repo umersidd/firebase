@@ -24,7 +24,7 @@ const registeruser = async (req, res) => {
     }).catch(error => {
         console.error(error);
       });
-      console.loh(User.data())
+    //   console.log(User.data())
     if (userDB.length > 0 ){
         return res.status(200).json("Already Exist")
     }
