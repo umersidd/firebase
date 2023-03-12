@@ -65,6 +65,7 @@ const saveData = async (req, res) => {
         return res.status(200).json("Data Created")
     }
     console.log(userDB[1]);
+    // db.collection("Sensor Data").doc(userDB[1]).delete();
     const update = await db.collection("Sensor Data").doc(userDB[1]).update(
         {
             sensorName: sensorName,
