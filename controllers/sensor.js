@@ -14,7 +14,7 @@ const getData = async (req, res) => {
     if (email) {
         const fetchSensors = await sensors.where('email', '==', email).get().then(snapshot => {
             snapshot.forEach(user => {
-                console.log(user.id, user.data());
+                // console.log(user.id, user.data());
                 sensorsData.push(user.data());
             });
         }).catch(error => {
@@ -33,7 +33,7 @@ const getData = async (req, res) => {
 
 
 const saveData = async (req, res) => {
-    const { email, sensorValue } = req.body
+    const { email, sensorName, sensorValue, bit } = req.body
     const userDB = [];
     const userRef = db.collection("Sensor Data")
     //     const data = await userRef.where("email", "==", req.body.email)
@@ -45,7 +45,7 @@ const saveData = async (req, res) => {
     //       });
     //  })
 
-    const User = await userRef.where('email', '==', req.body.email).get().then(snapshot => {
+    const User = await userRef.where('email', '==', req.body.email).where('sensorName', '==', req.body.sensorName).get().then(snapshot => {
         snapshot.forEach(user => {
             console.log(user.id, user.data());
             userDB.push(user.data(), user.id);
@@ -64,8 +64,13 @@ const saveData = async (req, res) => {
         // res.send(response) 
         return res.status(200).json("Data Created")
     }
-    console.log(userDB[1])
-    const update = await db.collection("Sensor Data").doc(userDB[1]).update({ sensorValue: sensorValue });
+    console.log(userDB[1]);
+    const update = await db.collection("Sensor Data").doc(userDB[1]).update(
+        {
+            sensorName: sensorName,
+            sensorValue: sensorValue,
+            bit: bit,
+        });
 
     res.status(200).json("Data Changed")
 

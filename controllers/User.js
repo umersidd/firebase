@@ -46,11 +46,11 @@ const loginuser = async (req, res) => {
         return res.status(200).json({ error: 'Please provide email and password' })
         throw new CustomError.BadRequestError('Please provide email and password');
     }
-    const userRef = db.collection("Users")
+    // const userRef = db.collection("Users")
     const userDB = [];
     // const queryRef = await userRef.where('name', '==', 'umer').get();
     // console.log(queryRef)
-    const User = await userRef.where('email', '==', req.body.email).get().then(snapshot => {
+    const User = await db.collection("Users").where('email', '==', req.body.email).get().then(snapshot => {
         snapshot.forEach(user => {
             console.log(user.id, user.data());
             userDB.push(user.data(),user.id);
