@@ -34,6 +34,7 @@ const getData = async (req, res) => {
 
 const saveData = async (req, res) => {
     const { email, sensorName, sensorValue, bit } = req.body
+    const stringSensorValue = sensorValue.toString()
     const userDB = [];
     const userRef = db.collection("Sensor Data")
     //     const data = await userRef.where("email", "==", req.body.email)
@@ -69,7 +70,7 @@ const saveData = async (req, res) => {
     const update = await db.collection("Sensor Data").doc(userDB[1]).update(
         {
             sensorName: sensorName,
-            sensorValue: sensorValue,
+            sensorValue: stringSensorValue,
             bit: bit,
         });
 
