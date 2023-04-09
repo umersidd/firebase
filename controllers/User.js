@@ -7,8 +7,11 @@ const db = fs.firestore();
 const bcrypt = require("bcryptjs");
 
 const registeruser = async (req, res) => {
-    const { email, name, password, phoneNo, location } = req.body
-
+    const { email, name, password, phoneNo, location, alertemail, alertmessage } = req.body
+    if (!email || !password) {
+        return res.status(200).json({ error: 'Please provide email and password' })
+        throw new CustomError.BadRequestError('Please provide email and password');
+    }
     const userDB = [];
     // const queryRef = await userRef.where('name', '==', 'umer').get();
     // console.log(queryRef)
@@ -29,7 +32,7 @@ const registeruser = async (req, res) => {
         return res.status(200).json("Already Exist")
     }
     const hashedPassword = await bcrypt.hash(password, 8);
-    const data = { email, name, hashedPassword, phoneNo, location }
+    const data = { email, name, hashedPassword, phoneNo, location , alertemail, alertmessage }
 
     const usersDb = db.collection("Users");
     const response = await usersDb.add(data);
