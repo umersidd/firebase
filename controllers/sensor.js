@@ -50,9 +50,7 @@ const saveData = async (req, res) => {
         snapshot.forEach(user => {
             console.log(user.id, user.data());
             userDB.push(user.data(), user.id);
-            // const name = some[0].name;
-            // res.json({"name": name})
-            // res.send(user);
+            
         });
     }).catch(error => {
         console.error(error);

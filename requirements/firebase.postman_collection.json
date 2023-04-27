@@ -126,7 +126,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\":\"umer3@gmail.com\",\"senosrvalue\":200\r\n}",
+					"raw": "{\r\n    \"email\":\"jamshed@gmail.com\",\"senosrvalue\":200\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

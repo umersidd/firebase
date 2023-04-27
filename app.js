@@ -24,3 +24,4 @@ app.use('/api/v1/user', createuser)
 app.use('/api/v1/sensor', sensorData)
 
 app.listen(3000, () => console.log("Up & RUnning *3000"));
+//localhost(ip):3000/api/v1/sensor/getData

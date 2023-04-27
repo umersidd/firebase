@@ -7,6 +7,7 @@ const createTokenUser = (user) => {
     name:user[0].name,
     userid: user[1],
     location: user[0].location,
+    phoneNo: user[0].phoneNo,
   };
 };
 
