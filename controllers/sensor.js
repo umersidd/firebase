@@ -191,7 +191,7 @@ const getAllUserData = async (req, res) => {
     // const lastDocumentSnapshot = snapshot.docs[snapshot.docs.length - 1];
 
     // const userRef = db.collection("Users").startAfter(lastDocumentSnapshot).limit(limit)
-    const userRef = db.collection("Users")
+    const userRef = db.collection("Users").limit(limit).offset(skip)
 
     let result2 = await userRef.get().then(snapshot => {
         snapshot.forEach(user => {
@@ -202,7 +202,7 @@ const getAllUserData = async (req, res) => {
                 const retObj = {
                     name: userData.name ? userData.name : '',
                     email: userData.email ? userData.email : '',
-                    location: userData.location ? userData.email : '',
+                    location: userData.location ? userData.location : '',
                     phoneNo: userData.phoneNo ? userData.phoneNo : '',
                     alertEmail: userData.alertemail ? userData.alertemail : '',
                     sensorName: found && found.sensorName ? found.sensorName : '',
