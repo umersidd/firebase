@@ -6,6 +6,8 @@ const db = fs.firestore();
 const bcrypt = require("bcryptjs");
 const { Vonage } = require('@vonage/server-sdk')
 const nodemailer = require("nodemailer");
+// const { query } = require('express');
+
 
 
 const getData = async (req, res) => {
@@ -100,7 +102,7 @@ const saveData = async (req, res) => {
 
 }
 
-function sendalert(emaill,number ){
+function sendalert(emaill, number) {
     const vonage = new Vonage({
         apiKey: "9387e031",
         apiSecret: "p2EjJyGoc0DuIXnj"
@@ -112,11 +114,11 @@ function sendalert(emaill,number ){
     const to = number
     const text = 'A text message sent using the Vonage SMS API'
     async function sendSMS() {
-        await vonage.sms.send({to, from, text})
+        await vonage.sms.send({ to, from, text })
             .then(resp => { console.log('Message sent successfully'); console.log(resp); })
             .catch(err => { console.log('There was an error sending the messages.'); console.error(err); });
     }
-    
+
     sendSMS();
 
     let transporter = nodemailer.createTransport({
@@ -150,43 +152,81 @@ function sendalert(emaill,number ){
     email()
 }
 
-const getAllUserData = async(req,res)=>{
+const getAllUserData = async (req, res) => {
     const { pageNo, count, } = req.query
     const email = req.user && req.user.email ? req.user.email : 0;
-    console.log(req.user.role)
-    if (req.user.role != "admin"){
+    //console.log(req.user.role)
+    if (req.user.role != "admin") {
         return res.status(200).json("Not Authorize to access this route")
     }
     // res.send("All Data")
 
-
-    const userDB = [];
-    // const queryRef = await userRef.where('name', '==', 'umer').get();
-    // console.log(queryRef)
-    const userRef = db.collection("Users")
-    let result = await userRef.get().then(snapshot => {
+    const sensorRef = db.collection("Sensor Data")
+    const sensorDB = [];
+    let result1 = await sensorRef.get().then(snapshot => {
         snapshot.forEach(user => {
-            console.log(user.id, user.data());
-            userDB.push(user.data(),user.id);
+            //console.log(user.id, user.data());
+            sensorDB.push(user.data());
             // const name = some[0].name;
             // res.json({"name": name})
             // res.send(user);
         });
     }).catch(error => {
         console.error(error);
-      });
+    });
+    //console.log(sensorDB[0])
+    // return res.json(sensorDB[0])
 
-    // return res.status(200).json({userDB})
+    //   return res.json(sensorDB)
+    const userDB = [];
+    const emails = [];
+    const resulttt = [];
     const page = Number(pageNo) || 1
     const limit = Number(count) || 10
+    const skip = (page - 1) * limit
+    // const queryRef = await userRef.where('name', '==', 'umer').get();
+    // console.log(queryRef)
+    // const query = db.collection("Users")
+    // const snapshot = await query.get();
+    // const lastDocumentSnapshot = snapshot.docs[snapshot.docs.length - 1];
+
+    // const userRef = db.collection("Users").startAfter(lastDocumentSnapshot).limit(limit)
+    const userRef = db.collection("Users")
+
+    let result2 = await userRef.get().then(snapshot => {
+        snapshot.forEach(user => {
+            //console.log(user.id, user.data());
+            const userData = user.data();
+            if (userData) {
+                const found = sensorDB.find(element => element.email == userData.email);
+                const retObj = {
+                    name: userData.name ? userData.name : '',
+                    email: userData.email ? userData.email : '',
+                    location: userData.location ? userData.email : '',
+                    phoneNo: userData.phoneNo ? userData.phoneNo : '',
+                    alertEmail: userData.alertemail ? userData.alertemail : '',
+                    sensorName: found && found.sensorName ? found.sensorName : '',
+                    sensorValue: found && found.sensorValue ? found.sensorValue : '',
+                }
+                resulttt.push(retObj);
+            }
+
+
+            // const name = some[0].name;
+            // res.json({"name": name})
+            // res.send(user);
+        });
+    }).catch(error => {
+        console.error(error);
+    });
+    // console.log(emails)
+    // return res.status(200).json(userDB)
+
     // const page = Number(req.query.page) || 1
     // const limit = Number(req.query.limit) || 10
-    const skip = (page - 1) * limit
+    const data = resulttt //await userDB
+    res.status(200).json({ data, nbHits: data.length })
 
-    userDB = userDB.skip(skip).limit(limit)
-    const data = await userDB
-    res.status(200).json({ data, nbHits: data.length, total: length ? length : 0 })
-   
 }
 
 
