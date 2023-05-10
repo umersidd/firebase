@@ -91,9 +91,9 @@ const saveData = async (req, res) => {
     }).catch(error => {
         console.error(error);
     });
-    if (sensorValue > 200) {
-        sendalert(user_for_alert[0].alertemail,user_for_alert[0].alertmessage)
-    }
+    // if (sensorValue > 200) {
+    //     sendalert(user_for_alert[0].alertemail,user_for_alert[0].alertmessage)
+    // }
 
 
     res.status(200).json("Data Changed")
@@ -150,6 +150,45 @@ function sendalert(emaill,number ){
     email()
 }
 
+const getAllUserData = async(req,res)=>{
+    const { pageNo, count, } = req.query
+    const email = req.user && req.user.email ? req.user.email : 0;
+    console.log(req.user.role)
+    if (req.user.role != "admin"){
+        return res.status(200).json("Not Authorize to access this route")
+    }
+    // res.send("All Data")
 
 
-module.exports = { getData, saveData }
+    const userDB = [];
+    // const queryRef = await userRef.where('name', '==', 'umer').get();
+    // console.log(queryRef)
+    const userRef = db.collection("Users")
+    let result = await userRef.get().then(snapshot => {
+        snapshot.forEach(user => {
+            console.log(user.id, user.data());
+            userDB.push(user.data(),user.id);
+            // const name = some[0].name;
+            // res.json({"name": name})
+            // res.send(user);
+        });
+    }).catch(error => {
+        console.error(error);
+      });
+
+    // return res.status(200).json({userDB})
+    const page = Number(pageNo) || 1
+    const limit = Number(count) || 10
+    // const page = Number(req.query.page) || 1
+    // const limit = Number(req.query.limit) || 10
+    const skip = (page - 1) * limit
+
+    userDB = userDB.skip(skip).limit(limit)
+    const data = await userDB
+    res.status(200).json({ data, nbHits: data.length, total: length ? length : 0 })
+   
+}
+
+
+
+module.exports = { getData, saveData, getAllUserData }

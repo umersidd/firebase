@@ -5,7 +5,7 @@ const {
     authorizePermissions,
   } = require('../middleware/authentication');
 
-const {getData, saveData} = require('../controllers/sensor')
+const {getData, saveData, getAllUserData} = require('../controllers/sensor')
 
 
 
@@ -13,6 +13,7 @@ const {getData, saveData} = require('../controllers/sensor')
 // router.route('/login').post(loginuser)
 router.route('/getdata').get(authenticateUser,getData)
 router.route('/getdata').post(saveData)
+router.route('/alluserdata').get(authenticateUser,getAllUserData)
 
 
 module.exports = router

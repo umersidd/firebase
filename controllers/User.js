@@ -31,8 +31,9 @@ const registeruser = async (req, res) => {
     if (userDB.length > 0 ){
         return res.status(200).json("Already Exist")
     }
+    const role = "user"
     const hashedPassword = await bcrypt.hash(password, 8);
-    const data = { email, name, hashedPassword, phoneNo, location , alertemail, alertmessage }
+    const data = { email, name, hashedPassword, phoneNo, location , alertemail, alertmessage, role }
 
     const usersDb = db.collection("Users");
     const response = await usersDb.add(data);
