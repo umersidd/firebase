@@ -3,6 +3,29 @@ const express = require("express");
 const cors = require('cors');
 const app = express();
 // const wbm = require('wbm');
+//sms//
+
+// const twilio = require('twilio');
+// require('dotenv').config();
+// const accountSid = 'ACb5c7bb6d3f88125d303575a466f67c08'; 
+// const authToken = 'ef38dd9bcbf41b0875a3e5981e12a326';
+// const client = require('twilio')(accountSid, authToken);
+
+// client.messages
+//     .create({
+//         body: 'hello',
+//         messagingServiceSid: 'MG558857d9c3d5e51dd3fd9b84b480e4d1',
+//         to: '+923102582051'
+//     })
+//     .then(message => console.log(message.sid))
+
+//sinch
+// Find your Service Plan ID and API Token at dashboard.sinch.com/sms/api/rest
+// Find your Sinch numbers at dashboard.sinch.com/numbers/your-numbers/numbers
+
+    
+
+//
 
 const cookieParser = require('cookie-parser');
 const { Vonage } = require('@vonage/server-sdk')

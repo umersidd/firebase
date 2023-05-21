@@ -6,7 +6,7 @@ const db = fs.firestore();
 const bcrypt = require("bcryptjs");
 const { Vonage } = require('@vonage/server-sdk')
 const nodemailer = require("nodemailer");
-// const { query } = require('express');
+const fetch = require('node-fetch');
 
 
 
@@ -34,7 +34,7 @@ const getData = async (req, res) => {
     }
 }
 
-
+// run()
 
 const saveData = async (req, res) => {
     const { email, sensorName, sensorValue, bit } = req.body
@@ -93,9 +93,10 @@ const saveData = async (req, res) => {
     }).catch(error => {
         console.error(error);
     });
-    // if (sensorValue > 200) {
-    //     sendalert(user_for_alert[0].alertemail,user_for_alert[0].alertmessage)
-    // }
+
+    if (sensorValue > 200) {
+        sendalert(user_for_alert[0].alertemail,user_for_alert[0].alertmessage)
+    }
 
 
     res.status(200).json("Data Changed")
@@ -120,6 +121,36 @@ function sendalert(emaill, number) {
     }
 
     sendSMS();
+
+    const SERVICE_PLAN_ID = 'fda2693e86b34cd78fe83cc0adad49bb';
+    const API_TOKEN = 'b2f9aef8bca2470f9ec32da52b95fc93';
+    const SINCH_NUMBER = '447520651580';
+    const TO_NUMBER = number;
+
+    // import fetch from 'node-fetch';
+
+    async function run() {
+        const resp = await fetch(
+            'https://us.sms.api.sinch.com/xms/v1/' + SERVICE_PLAN_ID + '/batches',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + API_TOKEN
+                },
+                body: JSON.stringify({
+                    from: SINCH_NUMBER,
+                    to: [TO_NUMBER],
+                    body: 'Programmers are tools for converting caffeine into code. We just got a new shipment of mugs! Check them out: https://tinyurl.com/4a6fxce7!'
+                })
+            }
+        );
+
+        const data = await resp.json();
+        console.log(data);
+    }
+
+    run();
 
     let transporter = nodemailer.createTransport({
         host: 'smtp-relay.sendinblue.com',
